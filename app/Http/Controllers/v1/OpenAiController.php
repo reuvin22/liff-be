@@ -88,7 +88,7 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "Compress in 400 characters. Remove the introduction"
+                        'content' => "Compress and remove 400 characters. Remove the introduction"
                     ],
                     [
                         'role' => 'user',
