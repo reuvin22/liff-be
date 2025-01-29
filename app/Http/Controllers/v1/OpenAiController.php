@@ -90,7 +90,7 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "「400文字を圧縮して削除してください。導入部分を削除してください。」"
+                        'content' => "「ガクチカ・志望動機・自己PRフォーマットに合わせて400文字圧縮して自己紹介文を削除してください。」"
                     ],
                     [
                         'role' => 'user',

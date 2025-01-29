@@ -16,6 +16,6 @@ Route::get('/user', function (Request $request) {
 Route::resource('answers', AnswerController::class);
 Route::get('compress/{userId}', [OpenAiController::class, 'compress']);
 Route::get('generate/{userId}', [OpenAiController::class, 'generateAgain']);
-Route::get('convert/{userId}', [ConvertToTextController::class, 'convertToText']);
+Route::post('convert/{userId}', [ConvertToTextController::class, 'convertToText']);
 Route::post('import', [DataImportController::class, 'dataImport']);
 Route::get('questions', [QuestionController::class, 'getQuestions']);
