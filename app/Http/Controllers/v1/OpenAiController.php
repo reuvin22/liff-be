@@ -58,7 +58,9 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "Please write the following sentences in Japanese so that the reader can easily understand. Please use 'desu' or 'masu' at the end of the sentence, and do not use noun-ending sentences. Please do not include an introduction, direct to Gakuchika. Please do not use bullet points. Please write the sentences specifically and in detail so that there are no logical leaps. If the abilities you stated at the beginning do not match your experience, activities, or thoughts, please create an episode that does. If you do this, please write two punctuation marks in the last sentence. Please write the sentences that show your motivation for applying specifically and in detail so that there are no logical leaps. Before writing the sentences, please check the 'corporate philosophy, vision, mission,' 'business content,' and 'specific job content' of the company. Please do not indicate the specific way in which you will use your skills, but only briefly indicate that your skills can be used in the job you are applying for. Please assume that the sentences will be submitted to the target company, and use the word 'your company.' Conditions for output 1. Write and output a Gakuchika in Japanese with the title [Gakuchika] and more than 3,000 characters. 2. Based on the abilities stated in your Gakuchika, create and output a [Reason for Applying] in Japanese of 3,000 characters or more. 3. Based on your Gakuchika and motivation for applying, create and output a [Self-PR] in Japanese of 3,000 characters or more. Please create your Gakuchika, motivation for applying, and self-PR separately."
+                        'content' => "以下の文章を日本語でわかりやすく書いてください。文末には「です」または「ます」を使用し、名詞で終わる文は避けてください。紹介文は含めず、Gakuchikaに直接指示してください。論理的に飛躍がないように、具体的かつ詳細に文章を書いてください。最初に述べた能力が経験や活動、考えと合わない場合には、それに合ったエピソードを作成してください。その場合、最後の文に句読点を二つ使ってください。応募の動機を具体的に、論理的に飛躍がないように記述してください。文を書く前に、会社の「企業理念、ビジョン、ミッション」「事業内容」「具体的な仕事内容」を確認してください。自分のスキルの具体的な使い方は示さず、応募する仕事にスキルを活かせることだけを簡潔に示してください。これらの文章が対象企業に提出されることを想定し、「貴社」という言葉を使用してください。
+
+                        出力条件 1. 日本語で「Gakuchika」とタイトルをつけ、3,000文字以上で出力してください。 2. 「Gakuchika」で述べた能力をもとに、3,000文字以上の「応募動機」を日本語で作成し、出力してください。 3. 「Gakuchika」と応募動機を基に、3,000文字以上の「自己PR」を日本語で作成し、出力してください。Gakuchika、応募動機、自己PRをそれぞれ別々に作成してください。"
                     ],
                     [
                         'role' => 'user',
@@ -88,7 +90,7 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "Compress and remove 400 characters. Remove the introduction"
+                        'content' => "「400文字を圧縮して削除してください。導入部分を削除してください。」"
                     ],
                     [
                         'role' => 'user',
@@ -115,7 +117,9 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "Please write the following sentences in Japanese so that the reader can easily understand. Please use 'desu' or 'masu' at the end of the sentence, and do not use noun-ending sentences. Please do not include an introduction, direct to Gakuchika. Please do not use bullet points. Please write the sentences specifically and in detail so that there are no logical leaps. If the abilities you stated at the beginning do not match your experience, activities, or thoughts, please create an episode that does. If you do this, please write two punctuation marks in the last sentence. Please write the sentences that show your motivation for applying specifically and in detail so that there are no logical leaps. Before writing the sentences, please check the 'corporate philosophy, vision, mission,' 'business content,' and 'specific job content' of the company. Please do not indicate the specific way in which you will use your skills, but only briefly indicate that your skills can be used in the job you are applying for. Please assume that the sentences will be submitted to the target company, and use the word 'your company.' Conditions for output 1. Write and output a Gakuchika in Japanese with the title [Gakuchika] and more than 3,000 characters. 2. Based on the abilities stated in your Gakuchika, create and output a [Reason for Applying] in Japanese of 3,000 characters or more. 3. Based on your Gakuchika and motivation for applying, create and output a [Self-PR] in Japanese of 3,000 characters or more. Please create your Gakuchika, motivation for applying, and self-PR separately."
+                        'content' => "以下の文章を日本語でわかりやすく書いてください。文末には「です」または「ます」を使用し、名詞で終わる文は避けてください。紹介文は含めず、Gakuchikaに直接指示してください。論理的に飛躍がないように、具体的かつ詳細に文章を書いてください。最初に述べた能力が経験や活動、考えと合わない場合には、それに合ったエピソードを作成してください。その場合、最後の文に句読点を二つ使ってください。応募の動機を具体的に、論理的に飛躍がないように記述してください。文を書く前に、会社の「企業理念、ビジョン、ミッション」「事業内容」「具体的な仕事内容」を確認してください。自分のスキルの具体的な使い方は示さず、応募する仕事にスキルを活かせることだけを簡潔に示してください。これらの文章が対象企業に提出されることを想定し、「貴社」という言葉を使用してください。
+
+                        出力条件 1. 日本語で「Gakuchika」とタイトルをつけ、3,000文字以上で出力してください。 2. 「Gakuchika」で述べた能力をもとに、3,000文字以上の「応募動機」を日本語で作成し、出力してください。 3. 「Gakuchika」と応募動機を基に、3,000文字以上の「自己PR」を日本語で作成し、出力してください。Gakuchika、応募動機、自己PRをそれぞれ別々に作成してください。"
                     ],
                     [
                         'role' => 'user',
