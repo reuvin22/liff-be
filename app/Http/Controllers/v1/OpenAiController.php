@@ -51,8 +51,9 @@ class OpenAiController extends Controller
     {
         try {
             $accessKey = env('OPEN_AI_API_KEY');
-            Log::info('Answer:' , ['answer' => $answers]);
+            Log::info('Answer:', ['answer' => $answers]);
             $client = GlobalOpenAI::client($accessKey);
+
             $result = $client->chat()->create([
                 'model' => 'gpt-4o',
                 'messages' => [
@@ -68,15 +69,18 @@ class OpenAiController extends Controller
                     ]
                 ]
             ]);
+
             Prompt::create([
                 'data_id' => $userId,
                 'prompt' => $result->choices[0]->message->content
             ]);
-            Cache::put('generated_result_'.$userId , $result, now()->addMinutes(30));
+
+            Cache::put('generated_result_' . $userId, $result->choices[0]->message->content, now()->addMinutes(30));
+
             return $result->choices[0]->message->content;
         } catch (Exception $e) {
             Log::error("Error sending request to OpenAI:", ['message' => $e->getMessage()]);
-            return false;
+            return response()->json(['error' => 'Error generating result'], 500);
         }
     }
 
