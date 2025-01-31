@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\v1\AnswerController;
+use App\Http\Controllers\CacheController;
 use App\Http\Controllers\v1\ConvertToTextController;
 use App\Http\Controllers\v1\DataImportController;
 use App\Http\Controllers\v1\OpenAiController;

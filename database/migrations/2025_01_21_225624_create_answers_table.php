@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('userId')->nullable();
             $table->string('displayName')->nullable();
             $table->longText('Question_1')->nullable();
+            $table->longText('Ability_Desc_1')->nullable();
             $table->longText('Question_2')->nullable();
+            $table->longText('Ability_Desc_2')->nullable();
             $table->longText('Question_3')->nullable();
             $table->longText('Question_4')->nullable();
             $table->longText('Question_5')->nullable();

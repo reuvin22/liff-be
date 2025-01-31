@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Data;
 use App\Models\Prompt;
-use App\Http\Controllers\v1\OpenAiController; // Import the OpenAiController
 use App\Models\DataImports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -13,13 +12,6 @@ use Illuminate\Support\Str;
 
 class DataImport implements ToCollection, WithHeadingRow
 {
-    protected $openAiController;
-
-    public function __construct(OpenAiController $openAiController)
-    {
-        $this->openAiController = $openAiController;
-    }
-
     /**
      * @param Collection $collection
      */
@@ -29,7 +21,7 @@ class DataImport implements ToCollection, WithHeadingRow
 
         $prompt = null;
         foreach ($collection as $row) {
-            $writingAdvice = $this->openAiController->writingAdvice(1, $row['questions']);
+            $writingAdvice = $row['writing_advice'] ?? null;
 
             $data = DataImports::where('question_number', $row['question_number'])->first();
 
