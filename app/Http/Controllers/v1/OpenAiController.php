@@ -75,9 +75,15 @@ class OpenAiController extends Controller
                 'prompt' => $result->choices[0]->message->content
             ]);
 
-            Cache::put('generated_result_' . $userId, $result->choices[0]->message->content, now()->addMinutes(30));
+            $response = $result->choices[0]->message->content;
 
-            return $result->choices[0]->message->content;
+            // Ensure the response is in Japanese
+            if (!preg_match('/[\p{Hiragana}\p{Katakana}\p{Han}]/u', $response)) {
+                Log::warning("Unexpected language in response: " . $response);
+                return response()->json(['error' => 'Generated response is not in Japanese'], 500);
+            }
+            Cache::put('generated_result_' . $userId, $response, now()->addMinutes(30));
+            return $response;
         } catch (Exception $e) {
             Log::error("Error sending request to OpenAI:", ['message' => $e->getMessage()]);
             return response()->json(['error' => 'Error generating result'], 500);
@@ -103,7 +109,16 @@ class OpenAiController extends Controller
                 ]
             ]);
 
-            return $result->choices[0]->message->content;
+
+            $response = $result->choices[0]->message->content;
+
+            // Ensure the response is in Japanese
+            if (!preg_match('/[\p{Hiragana}\p{Katakana}\p{Han}]/u', $response)) {
+                Log::warning("Unexpected language in response: " . $response);
+                return response()->json(['error' => 'Generated response is not in Japanese'], 500);
+            }
+            Cache::put('generated_result_' . $userId, $response, now()->addMinutes(30));
+            return $response;
         } catch (Exception $e) {
             Log::error("Error sending request to OpenAI:", ['message' => $e->getMessage()]);
             return false;
@@ -134,7 +149,16 @@ class OpenAiController extends Controller
                 ]
             ]);
 
-            return $result->choices[0]->message->content;
+
+            $response = $result->choices[0]->message->content;
+
+            // Ensure the response is in Japanese
+            if (!preg_match('/[\p{Hiragana}\p{Katakana}\p{Han}]/u', $response)) {
+                Log::warning("Unexpected language in response: " . $response);
+                return response()->json(['error' => 'Generated response is not in Japanese'], 500);
+            }
+            Cache::put('generated_result_' . $userId, $response, now()->addMinutes(30));
+            return $response;
         } catch (Exception $e) {
             Log::error("Error sending request to OpenAI:", ['message' => $e->getMessage()]);
             return false;
@@ -161,7 +185,16 @@ class OpenAiController extends Controller
                 ]
             ]);
 
-            return $result->choices[0]->message->content;
+
+            $response = $result->choices[0]->message->content;
+
+            // Ensure the response is in Japanese
+            if (!preg_match('/[\p{Hiragana}\p{Katakana}\p{Han}]/u', $response)) {
+                Log::warning("Unexpected language in response: " . $response);
+                return response()->json(['error' => 'Generated response is not in Japanese'], 500);
+            }
+            Cache::put('generated_result_' . $userId, $response, now()->addMinutes(30));
+            return $response;
         }catch(Exception $e){
             Log::error("Error: " . $e->getMessage());
             return false;
