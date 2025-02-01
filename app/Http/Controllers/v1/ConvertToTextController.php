@@ -7,25 +7,38 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ConvertToTextController extends Controller
 {
-    public function convertToText($userId)
+    /**
+     * Convert cached OpenAI response to a text file and provide a download link.
+     *
+     * @param string $userId
+     * @return \Illuminate\Http\Response
+     */
+    public function convertToText(string $userId)
     {
-        try{
+        try {
             $openAiResponse = Cache::get('generated_result_' . $userId);
-            $fileName = $userId . time() . '.txt';
-            $filePath = storage_path('app/public/' . $fileName);
 
-            Log::info('File path: ' . $filePath);
-            file_put_contents($filePath, $openAiResponse);
+            if (!$openAiResponse) {
+                return response()->json(['error' => 'No cached result found.'], 404);
+            }
 
-            $fileUrl = url('storage/' . $fileName);
+            $fileName = $userId . '_' . time() . '.txt';
 
-            return $fileUrl;
-        }catch(Exception $e){
-            Log::error("Error: " . $e->getMessage());
-            return false;
+            $filePath = 'public/' . $fileName;
+
+            $encodedContent = mb_convert_encoding($openAiResponse, 'UTF-8', 'auto');
+            Storage::put($filePath, $encodedContent);
+
+            return Storage::download($filePath, $fileName, [
+                'Content-Type' => 'text/plain',
+            ]);
+        } catch (Exception $e) {
+            Log::error('Failed to generate file for user ' . $userId . ': ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to generate file.'], 500);
         }
     }
 }
