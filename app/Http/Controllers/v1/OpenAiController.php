@@ -110,6 +110,11 @@ class OpenAiController extends Controller
             ]);
 
 
+            Prompt::create([
+                'data_id' => $userId,
+                'prompt' => $result->choices[0]->message->content
+            ]);
+
             $response = $result->choices[0]->message->content;
 
             // Ensure the response is in Japanese
@@ -149,6 +154,11 @@ class OpenAiController extends Controller
                 ]
             ]);
 
+
+            Prompt::create([
+                'data_id' => $userId,
+                'prompt' => $result->choices[0]->message->content
+            ]);
 
             $response = $result->choices[0]->message->content;
 
