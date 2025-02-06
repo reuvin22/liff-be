@@ -5,6 +5,7 @@ namespace App\Services;
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache; // Using Cache instead of Session
 
 class FirebaseStorageService
 {
@@ -48,7 +49,26 @@ class FirebaseStorageService
             return null;
         }
 
-        return $fileDetails[array_rand($fileDetails)];
+        $lastSelectedFile = Cache::get('last_selected_file');
+
+        $selectedFile = $this->getUniqueRandomFile($fileDetails, $lastSelectedFile);
+
+        Cache::put('last_selected_file', $selectedFile['name'], now()->addMinutes(10));
+
+        return $selectedFile;
+    }
+
+    private function getUniqueRandomFile($files, $lastFile)
+    {
+        if (count($files) === 1) {
+            return $files[0];
+        }
+
+        do {
+            $selectedFile = $files[array_rand($files)];
+        } while ($selectedFile['name'] === $lastFile);
+
+        return $selectedFile;
     }
 
     public function getSignedUrl($fileName)

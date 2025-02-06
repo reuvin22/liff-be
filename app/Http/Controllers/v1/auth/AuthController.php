@@ -13,22 +13,24 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $data = $request->all();
+        $data = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
         $user = User::where('email', $data['email'])->first();
 
-        if(!$user || !Hash::check($data['password'], $user->password))
-        {
+        if (!$user || !Hash::check($data['password'], $user->password)) {
             return response()->json([
-                'message' => 'Wrong email or Password'
+                'message' => 'Invalid email or password.',
             ], 401);
         }
 
         $token = $user->createToken('user-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Login Successfully',
-            'token' => $token
+            'message' => 'Login successful',
+            'token' => $token,
         ], 200);
     }
 

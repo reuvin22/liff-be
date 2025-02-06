@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -20,7 +21,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
         $data = $request->all();
 
@@ -64,7 +65,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         $user = User::find($id);
 

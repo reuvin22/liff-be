@@ -5,6 +5,7 @@ use App\Http\Controllers\CacheController;
 use App\Http\Controllers\v1\auth\AuthController;
 use App\Http\Controllers\v1\ConvertToTextController;
 use App\Http\Controllers\v1\data\DashboardDataController;
+use App\Http\Controllers\v1\data\UserController;
 use App\Http\Controllers\v1\DataImportController;
 use App\Http\Controllers\v1\FirebaseController;
 use App\Http\Controllers\v1\OpenAiController;
@@ -28,9 +29,11 @@ Route::get('questions', [QuestionController::class, 'getQuestions']);
 Route::get('/firebase-files', [FirebaseController::class, 'getFiles']);
 
 //Authorized Routes
+Route::resource('/users', UserController::class);
 Route::post('/login', [AuthController::class, 'login']);
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
+    Route::resource('/logged-in-user', UserController::class);
     Route::get('/user-count', [DashboardDataController::class, 'userCount']);
-    Route::get('/ads-count', [DashboardDataController::class, 'adsCount']);
+    Route::get('/prompt-count', [DashboardDataController::class, 'promptCount']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
