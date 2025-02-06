@@ -11,27 +11,71 @@ use Illuminate\Http\Request;
 
 class DashboardDataController extends Controller
 {
-    public function userCount()
+    public function userCount(Request $request)
     {
-        $count = User::count();
+        $month = $request->input('month');
+        $year = $request->input('year');
+        $query = User::query();
+
+        if ($year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        if ($month) {
+            $query->whereMonth('created_at', $month);
+        }
+        $count = $query->count();
 
         return response()->json([
-            'user-count' => $count
+            'user-count' => $count,
+            'month' => $month,
+            'year' => $year
         ], 200);
     }
 
-    public function promptCount()
+    public function promptCount(Request $request)
     {
-        $count = Prompt::count();
+        $month = $request->input('month');
+        $year = $request->input('year');
+        $query = Prompt::query();
+
+        if ($year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        if ($month) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        $count = $query->count();
 
         return response()->json([
-            'result-count' => $count
+            'result-count' => $count,
+            'month' => $month,
+            'year' => $year
         ], 200);
     }
 
     public function adsCount(Request $request)
     {
-        $data = $request->path();
+        $month = $request->input('month');
+        $year = $request->input('year');
+        $query = AdsCounter::query();
 
+        if ($year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        if ($month) {
+            $query->whereMonth('created_at', $month);
+        }
+
+        $count = $query->sum('ads_counts');
+
+        return response()->json([
+            'ads_counts' => $count,
+            'month' => $month,
+            'year' => $year
+        ], 200);
     }
 }

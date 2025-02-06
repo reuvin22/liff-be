@@ -29,11 +29,12 @@ Route::get('questions', [QuestionController::class, 'getQuestions']);
 Route::get('/firebase-files', [FirebaseController::class, 'getFiles']);
 
 //Authorized Routes
-Route::resource('/users', UserController::class);
+Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
-    Route::resource('/logged-in-user', UserController::class);
+    Route::resource('/users', UserController::class);
     Route::get('/user-count', [DashboardDataController::class, 'userCount']);
     Route::get('/prompt-count', [DashboardDataController::class, 'promptCount']);
+    Route::get('/ads-count', [DashboardDataController::class, 'promptCount']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
