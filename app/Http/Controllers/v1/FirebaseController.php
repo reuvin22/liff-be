@@ -22,10 +22,10 @@ class FirebaseController extends Controller
         $files = $this->firebaseService->listFiles($folder);
 
         $ads = AdsCounter::firstOrCreate([], [
-            'ads_count' => 0
+            'ads_counts' => 0
         ]);
 
-        $ads->increment('ads_count');
+        $ads->increment('ads_counts');
 
         return response()->json($files);
     }
