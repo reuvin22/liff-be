@@ -53,7 +53,6 @@ class AnswerController extends Controller
             'Question_11' => 'required',
             'Question_12' => 'required',
             'Question_13' => 'required',
-            'Question_14' => 'required',
         ]);
 
         $data = $request->all();
@@ -77,7 +76,6 @@ class AnswerController extends Controller
                 'Question_11' => $data['Question_11'],
                 'Question_12' => $data['Question_12'],
                 'Question_13' => $data['Question_13'],
-                'Question_14' => $data['Question_14'],
             ]);
 
             if(!$answers){

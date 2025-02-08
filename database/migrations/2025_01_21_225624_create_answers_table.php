@@ -30,7 +30,6 @@ return new class extends Migration
             $table->longText('Question_11')->nullable();
             $table->longText('Question_12')->nullable();
             $table->longText('Question_13')->nullable();
-            $table->longText('Question_14')->nullable();
             $table->timestamps();
         });
     }
