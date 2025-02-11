@@ -74,8 +74,6 @@ class AnswerController extends Controller
                 'Question_9' => $data['Question_9'],
                 'Question_10' => $data['Question_10'],
                 'Question_11' => $data['Question_11'],
-                'Question_12' => $data['Question_12'],
-                'Question_13' => $data['Question_13'],
             ]);
 
             if(!$answers){
@@ -97,7 +95,8 @@ class AnswerController extends Controller
 
             return response()->json([
                 'message' => 'Answer Saved Successfully',
-                'openai' => $result
+                'openai' => $result,
+                'answer' => $answers
             ], 200);
         }catch(Exception $e){
             return response()->json([

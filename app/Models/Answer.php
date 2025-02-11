@@ -20,8 +20,6 @@ class Answer extends Model
         'Question_9',
         'Question_10',
         'Question_11',
-        'Question_12',
-        'Question_13',
         'Ability_Desc_1',
         'Ability_Desc_2'
     ];
