@@ -2,24 +2,42 @@
 
 namespace App\Http\Controllers\v1\auth;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use App\Mail\ForgotPasswordEmail;
+use App\Models\User;
 
 class ForgotPasswordController extends Controller
 {
-    public function checKEmail(Request $request)
+    public function checkEmail(Request $request)
     {
-        $data = $request->input('email');
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
-        $user = User::where('email', $data['email']);
+        $user = User::where('email', $request->email)->first();
 
-        if(!$user){
-            return response()->json([
-                'message' => 'Email is not existing!'
-            ], 400);
+        if (!$user) {
+            return response()->json(['message' => 'Email does not exist!'], 400);
         }
 
+        $token = Str::random(60);
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $user->email],
+            [
+                'email' => $user->email,
+                'token' => bcrypt($token),
+                'created_at' => now()
+            ]
+        );
 
+        Mail::to($user->email)->send(new ForgotPasswordEmail($token, $user->email));
+
+        return response()->json([
+            'message' => 'A password reset link has been sent to your email.',
+        ], 200);
     }
 }

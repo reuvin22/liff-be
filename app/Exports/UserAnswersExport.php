@@ -35,7 +35,7 @@ class UserAnswersExport implements FromCollection, WithHeadings, WithStyles
     public function styles(Worksheet $sheet)
     {
         return [
-            1 => ['font' => ['bold' => true]] // Row 1 (Headers) will be bold
+            1 => ['font' => ['bold' => true]]
         ];
     }
 }

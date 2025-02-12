@@ -3,6 +3,8 @@
 use App\Http\Controllers\v1\AnswerController;
 use App\Http\Controllers\CacheController;
 use App\Http\Controllers\v1\auth\AuthController;
+use App\Http\Controllers\v1\auth\ForgotPasswordController;
+use App\Http\Controllers\v1\auth\ResetPasswordController;
 use App\Http\Controllers\v1\ConvertToTextController;
 use App\Http\Controllers\v1\data\DashboardDataController;
 use App\Http\Controllers\v1\data\UserController;
@@ -29,6 +31,8 @@ Route::post('import', [DataImportController::class, 'dataImport']);
 Route::get('questions', [QuestionController::class, 'getQuestions']);
 Route::get('/firebase-files', [FirebaseController::class, 'getFiles']);
 Route::get('/export-answers/{userId}', [ExportUserAnswers::class, 'exportUserAnswers']);
+Route::post('/forgot-password', [ForgotPasswordController::class, 'checkEmail']);
+
 //Authorized Routes
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
