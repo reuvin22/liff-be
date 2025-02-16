@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('ads_counters', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('ads_counts')->default(0);
+            $table->string('name')->nullable();
+            $table->longText('url')->nullable();
             $table->timestamps();
         });
     }

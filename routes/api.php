@@ -11,6 +11,7 @@ use App\Http\Controllers\v1\data\UserController;
 use App\Http\Controllers\v1\DataImportController;
 use App\Http\Controllers\v1\ExportUserAnswers;
 use App\Http\Controllers\v1\FirebaseController;
+use App\Http\Controllers\v1\FirebasePostController;
 use App\Http\Controllers\v1\OpenAiController;
 use App\Http\Controllers\v1\QuestionController;
 use App\Models\DataImports;
@@ -40,6 +41,6 @@ Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
     Route::resource('/users', UserController::class);
     Route::get('/user-count', [DashboardDataController::class, 'userCount']);
     Route::get('/prompt-count', [DashboardDataController::class, 'promptCount']);
-    Route::get('/ads-count', [DashboardDataController::class, 'promptCount']);
+    Route::get('/ads-count', [DashboardDataController::class, 'adsCount']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

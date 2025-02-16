@@ -21,11 +21,10 @@ class FirebaseController extends Controller
         $folder = 'chatbot/';
         $files = $this->firebaseService->listFiles($folder);
 
-        $ads = AdsCounter::firstOrCreate([], [
-            'ads_counts' => 0
+        AdsCounter::create([
+            'name' => $files['name'],
+            'url' => $files['url']
         ]);
-
-        $ads->increment('ads_counts');
 
         return response()->json($files);
     }

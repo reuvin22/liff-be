@@ -68,7 +68,7 @@ class OpenAiController extends Controller
                             2.ガクチカで示した能力を基に、【志望動機】という対応で日本語で3000文字以上で作成、及び出力。
                             3.ガクチカと志望動機を基に、【自己PR】というタイトルで日本語で3000文字以上で作成、及び出力。
                             ガクチカ・志望動機・自己PRをそれぞれを個別に作成してください。
-                            {USER_INPUT}
+                            {{USER_INPUT}}
                             【】で囲まれた内容について、能力を発揮した様子が読み手に伝わる文章を創作して下さい。
                             示された能力を発揮することで、どのような普遍性の高い広範囲に応用可能な効果が出せることを学んだかについて、文末で説明してください。
                             その必要性を実感したことについて示された経験になぞらえ説明してください。
@@ -87,7 +87,26 @@ class OpenAiController extends Controller
                             ６．自身が企業の発展に必ず貢献できることを宣言してください。
                             ７．最後に、採用してもらえるように明確にお願いしてください。";
 
-        $finalSystemContent = str_replace("{USER_INPUT}", $userContent, $systemPrompt);
+        $finalSystemContent = str_replace("{{USER_INPUT}}", $userContent, $systemPrompt);
+        $messages = [];
+        $conversationHistory = Prompt::where('data_id', $userId)
+            ->orderBy('created_at')
+            ->get();
+
+        foreach ($conversationHistory as $history) {
+            $messages[] = [
+                'role' => $history->role,
+                'content' => $history->prompt
+            ];
+        }
+
+        Log::info('TEST', ['TEST' => $messages]);
+        Prompt::create([
+            'data_id' => $userId,
+            'role' => 'user',
+            'prompt' => $finalSystemContent
+        ]);
+
         try {
             $accessKey = env('OPEN_AI_API_KEY');
             Log::info('prompt:', ['prompt' => $systemPrompt]);
@@ -105,6 +124,7 @@ class OpenAiController extends Controller
 
             Prompt::create([
                 'data_id' => $userId,
+                'role' => 'system',
                 'prompt' => $result->choices[0]->message->content
             ]);
 
@@ -156,6 +176,14 @@ class OpenAiController extends Controller
         ";
 
         $compress = str_replace("{COMPRESS_RESULT}", $latestPrompt->prompt, $finalPrompt);
+        Prompt::create([
+            'data_id' => $userId,
+            'role' => 'user',
+            'prompt' => $compress
+        ]);
+        $messages = [];
+
+        Log::info('TEST', ['TEST' => $messages]);
         try {
             $accessKey = env('OPEN_AI_API_KEY');
             $client = GlobalOpenAI::client($accessKey);
@@ -164,13 +192,14 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => $compress
-                    ]
+                        'content' => "Assume that you are job hunter looking for a job. Compress this answer and give me a quality result to impress the employer. Here's the letter that you need to compress ". $latestPrompt->prompt
+                    ],
                 ]
             ]);
 
             Prompt::create([
                 'data_id' => $userId,
+                'role' => 'system',
                 'prompt' => $result->choices[0]->message->content
             ]);
 
@@ -244,7 +273,7 @@ class OpenAiController extends Controller
                     2.ガクチカで示した能力を基に、【志望動機】という対応で日本語で3000文字以上で作成、及び出力。
                     3.ガクチカと志望動機を基に、【自己PR】というタイトルで日本語で3000文字以上で作成、及び出力。
                     ガクチカ・志望動機・自己PRをそれぞれを個別に作成してください。
-                    {USER_INPUT}
+                    {{USER_INPUT}}
                     【】で囲まれた内容について、能力を発揮した様子が読み手に伝わる文章を創作して下さい。
                     示された能力を発揮することで、どのような普遍性の高い広範囲に応用可能な効果が出せることを学んだかについて、文末で説明してください。
                     その必要性を実感したことについて示された経験になぞらえ説明してください。
@@ -263,7 +292,23 @@ class OpenAiController extends Controller
                     ６．自身が企業の発展に必ず貢献できることを宣言してください。
                     ７．最後に、採用してもらえるように明確にお願いしてください。";
 
-            $finalSystemContent = str_replace("{USER_INPUT}", $userContent, $systemPrompt);
+            $finalSystemContent = str_replace("{{USER_INPUT}}", $userContent, $systemPrompt);
+            Prompt::create([
+                'data_id' => $userId,
+                'role' => 'user',
+                'prompt' => $finalSystemContent
+            ]);
+            $messages = [];
+            $conversationHistory = Prompt::where('data_id', $userId)
+                ->orderBy('created_at')
+                ->get();
+
+            foreach ($conversationHistory as $history) {
+                $messages[] = [
+                    'role' => $history->role,
+                    'content' => $history->prompt
+                ];
+            }
             try {
                 $prompt = Prompt::where('data_id', $userId)->latest()->first();
                 $generateResult = Cache::get('generated_result_' . $userId);
@@ -283,6 +328,7 @@ class OpenAiController extends Controller
 
                 Prompt::create([
                     'data_id' => $userId,
+                    'role' => 'system',
                     'prompt' => $result->choices[0]->message->content
                 ]);
 
