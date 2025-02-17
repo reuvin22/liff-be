@@ -28,7 +28,6 @@ Route::get('compress/{userId}', [OpenAiController::class, 'compress']);
 Route::get('generate/{userId}', [OpenAiController::class, 'generateAgain']);
 Route::post('convert/{userId}', [ConvertToTextController::class, 'convertToText']);
 Route::get('convert/{userId}', [ConvertToTextController::class, 'convertToText']);
-Route::post('import', [DataImportController::class, 'dataImport']);
 Route::get('questions', [QuestionController::class, 'getQuestions']);
 Route::get('/firebase-files', [FirebaseController::class, 'getFiles']);
 Route::get('/export-answers/{userId}', [ExportUserAnswers::class, 'exportUserAnswers']);
@@ -38,9 +37,11 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'checkEmail'])
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
+    Route::post('import', [DataImportController::class, 'dataImport']);
     Route::resource('/users', UserController::class);
     Route::get('/user-count', [DashboardDataController::class, 'userCount']);
     Route::get('/prompt-count', [DashboardDataController::class, 'promptCount']);
     Route::get('/ads-count', [DashboardDataController::class, 'adsCount']);
+    Route::get('/answer-count', [DashboardDataController::class, 'answerCount']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

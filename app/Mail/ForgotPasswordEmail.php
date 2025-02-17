@@ -24,7 +24,7 @@ class ForgotPasswordEmail extends Mailable
 
     public function build()
     {
-        return $this->subject('Reset Your Password')
+        return $this->subject('パスワードをリセットする')
                     ->view('ForgotPasswordEmail')
                     ->with([
                         'resetUrl' => url("/reset-password?token={$this->token}&email={$this->email}"),

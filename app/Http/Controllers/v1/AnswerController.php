@@ -50,9 +50,7 @@ class AnswerController extends Controller
             'Question_8' => 'required',
             'Question_9' => 'required',
             'Question_10' => 'required',
-            'Question_11' => 'required',
-            'Question_12' => 'required',
-            'Question_13' => 'required',
+            'Question_11' => 'required'
         ]);
 
         $data = $request->all();

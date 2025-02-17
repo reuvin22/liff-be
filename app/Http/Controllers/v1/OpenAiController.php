@@ -19,8 +19,8 @@ class OpenAiController extends Controller
             $prompt1 = '【大学時代に'. $answers->Question_3. 'の活動を通じて、 '. $answers->Question_1. ', '. $answers->Question_2. 'を発揮したエピソードについて説明します。';
             $prompt2 = '具体的には、'. $answers->Question_5. 'として '. $answers->Question_4. '、をめざして取り組んだ経験です。';
             $prompt3 = '説明の中で、どのように'. $answers->Question_1. '、'. $answers->Question_2. 'を発揮したかについて具体的に説明してください。';
-            $prompt4 = '具体的に説明するための条件として、'. $answers->Question_1. ' とは'. $answers->Question_2. 'です。';
-            $prompt5 = 'また、'. $answers->Question_2. ' とは'. $answers->Question_1. ' です。';
+            $prompt4 = '具体的に説明するための条件として、'. $answers->Question_1. ' とは '. $answers->Ability_Desc_1. ' です。';
+            $prompt5 = 'また、'. $answers->Question_2. ' とは'. $answers->Ability_Desc_2. ' です。';
             $prompt6 = '活動の目的は'. $answers->Question_4. 'であったが、課題であった'. $answers->Question_6. 'の改善に取り組んだ。' ;
             $prompt7 = 'この取り組みで、'. $answers->Question_1. '及び'. $answers->Question_2. 'を発揮し、'. $answers->Question_7. 'ことを意識した。';
             $prompt8 = '結果として、'. $answers->Question_8. '。】';
@@ -88,24 +88,6 @@ class OpenAiController extends Controller
                             ７．最後に、採用してもらえるように明確にお願いしてください。";
 
         $finalSystemContent = str_replace("{{USER_INPUT}}", $userContent, $systemPrompt);
-        $messages = [];
-        $conversationHistory = Prompt::where('data_id', $userId)
-            ->orderBy('created_at')
-            ->get();
-
-        foreach ($conversationHistory as $history) {
-            $messages[] = [
-                'role' => $history->role,
-                'content' => $history->prompt
-            ];
-        }
-
-        Log::info('TEST', ['TEST' => $messages]);
-        Prompt::create([
-            'data_id' => $userId,
-            'role' => 'user',
-            'prompt' => $finalSystemContent
-        ]);
 
         try {
             $accessKey = env('OPEN_AI_API_KEY');
@@ -124,7 +106,6 @@ class OpenAiController extends Controller
 
             Prompt::create([
                 'data_id' => $userId,
-                'role' => 'system',
                 'prompt' => $result->choices[0]->message->content
             ]);
 
@@ -168,22 +149,11 @@ class OpenAiController extends Controller
         ５．志望企業を「貴社」とし、必ず貢献する意思を明確に示し、採用していただけるようお願いしてください。
         #体言止めは使用せず、文章を作成してください。
 
-        以下の手順を守り、【ガクチカ】【志望動機】【自己PR】の中の文章の要約を以下の条件を満たして作成してください。
-        #短くすればいいというものではありません。
-        #伝わりやすい文章にしてください。
-
         #入力文：{COMPRESS_RESULT}
         ";
 
         $compress = str_replace("{COMPRESS_RESULT}", $latestPrompt->prompt, $finalPrompt);
-        Prompt::create([
-            'data_id' => $userId,
-            'role' => 'user',
-            'prompt' => $compress
-        ]);
-        $messages = [];
 
-        Log::info('TEST', ['TEST' => $messages]);
         try {
             $accessKey = env('OPEN_AI_API_KEY');
             $client = GlobalOpenAI::client($accessKey);
@@ -192,14 +162,13 @@ class OpenAiController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "Assume that you are job hunter looking for a job. Compress this answer and give me a quality result to impress the employer. Here's the letter that you need to compress ". $latestPrompt->prompt
+                        'content' => $compress
                     ],
                 ]
             ]);
 
             Prompt::create([
                 'data_id' => $userId,
-                'role' => 'system',
                 'prompt' => $result->choices[0]->message->content
             ]);
 
@@ -224,8 +193,8 @@ class OpenAiController extends Controller
             $prompt1 = '【大学時代に'. $answers->Question_3. 'の活動を通じて、 '. $answers->Question_1. ', '. $answers->Question_2. 'を発揮したエピソードについて説明します。';
             $prompt2 = '具体的には、'. $answers->Question_5. 'として '. $answers->Question_4. '、をめざして取り組んだ経験です。';
             $prompt3 = '説明の中で、どのように'. $answers->Question_1. '、'. $answers->Question_2. 'を発揮したかについて具体的に説明してください。';
-            $prompt4 = '具体的に説明するための条件として、'. $answers->Question_1. ' とは'. $answers->Question_2. 'です。';
-            $prompt5 = 'また、'. $answers->Question_2. ' とは'. $answers->Question_1. ' です。';
+            $prompt4 = '具体的に説明するための条件として、'. $answers->Question_1. ' とは '. $answers->Ability_Desc_1. ' です。';
+            $prompt5 = 'また、'. $answers->Question_2. ' とは'. $answers->Ability_Desc_2. ' です。';
             $prompt6 = '活動の目的は'. $answers->Question_4. 'であったが、課題であった'. $answers->Question_6. 'の改善に取り組んだ。' ;
             $prompt7 = 'この取り組みで、'. $answers->Question_1. '及び'. $answers->Question_2. 'を発揮し、'. $answers->Question_7. 'ことを意識した。';
             $prompt8 = '結果として、'. $answers->Question_8. '。】';
@@ -293,22 +262,6 @@ class OpenAiController extends Controller
                     ７．最後に、採用してもらえるように明確にお願いしてください。";
 
             $finalSystemContent = str_replace("{{USER_INPUT}}", $userContent, $systemPrompt);
-            Prompt::create([
-                'data_id' => $userId,
-                'role' => 'user',
-                'prompt' => $finalSystemContent
-            ]);
-            $messages = [];
-            $conversationHistory = Prompt::where('data_id', $userId)
-                ->orderBy('created_at')
-                ->get();
-
-            foreach ($conversationHistory as $history) {
-                $messages[] = [
-                    'role' => $history->role,
-                    'content' => $history->prompt
-                ];
-            }
             try {
                 $prompt = Prompt::where('data_id', $userId)->latest()->first();
                 $generateResult = Cache::get('generated_result_' . $userId);
@@ -328,7 +281,6 @@ class OpenAiController extends Controller
 
                 Prompt::create([
                     'data_id' => $userId,
-                    'role' => 'system',
                     'prompt' => $result->choices[0]->message->content
                 ]);
 

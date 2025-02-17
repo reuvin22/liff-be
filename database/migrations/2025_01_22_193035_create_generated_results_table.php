@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('userId');
             $table->longText('openai_result');
-            $table->string('role');
             $table->timestamps();
         });
     }
