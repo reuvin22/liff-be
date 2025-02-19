@@ -117,7 +117,6 @@ class OpenAiController extends Controller
                 Log::warning("Unexpected language in response: " . $response);
                 return response()->json(['error' => 'Generated response is not in Japanese'], 500);
             }
-            Cache::put('generated_result_' . $userId, $response, now()->addMinutes(30));
             return $response;
         } catch (Exception $e) {
             Log::error("Error sending request to OpenAI:", ['message' => $e->getMessage()]);
@@ -179,7 +178,7 @@ class OpenAiController extends Controller
                 Log::warning("Unexpected language in response: " . $response);
                 return response()->json(['error' => 'Generated response is not in Japanese'], 500);
             }
-            Cache::put('generated_result_' . $userId, $response, now()->addMinutes(30));
+
             return $response;
         } catch (Exception $e) {
             Log::error("Error sending request to OpenAI:", ['message' => $e->getMessage()]);
