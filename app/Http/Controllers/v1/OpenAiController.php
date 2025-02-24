@@ -95,7 +95,8 @@ class OpenAiController extends Controller
             $client = GlobalOpenAI::client($accessKey);
             $result = $client->chat()->create([
                 'model' => 'gpt-4o',
-                'temperature' => 0.8,
+                'temperature' => 0.7,
+                'top_p' => 0.9,
                 'messages' => [
                     [
                         'role' => 'system',
@@ -158,6 +159,8 @@ class OpenAiController extends Controller
             $client = GlobalOpenAI::client($accessKey);
             $result = $client->chat()->create([
                 'model' => 'gpt-4o',
+                'temperature' => 0.7,
+                'top_p' => 0.9,
                 'messages' => [
                     [
                         'role' => 'system',
@@ -268,7 +271,8 @@ class OpenAiController extends Controller
                 $client = GlobalOpenAI::client($accessKey);
                 $result = $client->chat()->create([
                     'model' => 'gpt-4o',
-                    'temperature' => 0.8,
+                    'temperature' => 0.7,
+                    'top_p' => 0.9,
                     'messages' => [
                         [
                             'role' => 'system',
