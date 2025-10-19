@@ -51,4 +51,19 @@ class AuthController extends Controller
             'message' => 'Logout Successfully'
         ], 200);
     }
+
+    public function profile()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not authenticated'
+            ], 401);
+        }
+
+        return response()->json([
+            'user' => $user
+        ], 200);
+    }
 }

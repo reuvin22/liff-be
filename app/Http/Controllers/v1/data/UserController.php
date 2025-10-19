@@ -13,11 +13,32 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return User::all();
+        $search = $request->query('search');
+        $limit  = $request->query('limit', 5);
+        $page   = $request->query('page', 1);
+
+        $query = User::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('first_name', 'LIKE', "%{$search}%")
+                ->orWhere('last_name', 'LIKE', "%{$search}%")
+                ->orWhereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
+                ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
+        return $query
+                ->orderBy('id', 'desc')
+                ->paginate($limit);
     }
 
+    public function total_admins()
+    {
+        return User::count();
+    }
     /**
      * Store a newly created resource in storage.
      */
@@ -95,21 +116,20 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        if(empty($user) || !$user){
+        if (!$user) {
             return response()->json([
-                'message' => 'Failed to fetch user'
-            ], 200);
+                'message' => 'User not found'
+            ], 404);
         }
 
-        $delete = $user->delete();
-        if(!$delete){
+        if (!$user->delete()) {
             return response()->json([
-                'message' => 'Failed to Delete User'
-            ], 400);
+                'message' => 'Failed to delete user'
+            ], 500);
         }
 
         return response()->json([
-            'message' => 'Delete User Successfully',
+            'message' => 'User deleted successfully',
         ], 200);
     }
 }

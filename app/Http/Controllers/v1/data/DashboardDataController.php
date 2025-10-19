@@ -215,4 +215,8 @@ class DashboardDataController extends Controller
             'answers_count' => $countData
         ], 200);
     }
+
+    public function totalLineUsers() {
+        return Answer::distinct('userId')->count();
+    }
 }
