@@ -50,6 +50,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'password' => $data['password'],
             'first_name' => $data['first_name'],
+            'middle_name' => $data['middle_name'],
             'last_name' => $data['last_name'],
             'role' => $data['role']
         ]);
