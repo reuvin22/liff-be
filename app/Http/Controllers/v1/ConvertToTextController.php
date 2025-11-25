@@ -18,7 +18,6 @@ class ConvertToTextController extends Controller
      * @param string $userId
      * @return \Illuminate\Http\Response
      */
-    ///TEST
     public function convertToText(string $userId)
     {
         try {
