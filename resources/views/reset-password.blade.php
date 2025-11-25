@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,48 +7,58 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             padding: 20px;
-            border-radius: 5px;
+            margin: 0;
+            background: #f7f7f7;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         input {
             width: 100%;
-            padding: 10px;
+            box-sizing: border-box;
+            padding: 12px;
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
+            font-size: 16px;
         }
         button {
             background-color: #3490dc;
             color: white;
-            padding: 10px;
+            padding: 12px;
             width: 100%;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #2779bd;
-        }
-        .error {
-            color: red;
-            font-size: 14px;
-        }
-        .success {
-            color: green;
-            font-size: 14px;
-        }
-        .countdown {
             font-size: 16px;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #333;
+        }
+        button:hover { background-color: #2779bd; }
+        .error { color: red; font-size: 14px; }
+        .success { color: green; font-size: 14px; }
+        .countdown { font-size: 16px; margin-top: 12px; font-weight: bold; color: #333; }
+
+        @media (max-width: 480px) {
+            body {
+                align-items: flex-start;
+                padding-top: 40px;
+            }
+            .container {
+                padding: 15px;
+                margin-top: 20px;
+                box-shadow: none;
+                border-radius: 0;
+            }
         }
 
         .toast {
@@ -65,21 +75,12 @@
             border-radius: 5px;
             z-index: 1000;
         }
-
         .toast.show {
             visibility: visible;
             animation: fadein 0.5s, fadeout 0.5s 4.5s;
         }
-
-        @keyframes fadein {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeout {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
+        @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeout { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -127,7 +128,7 @@
                 if (timeLeft <= 0) {
                     showToast("Redirecting now...");
                     setTimeout(() => {
-                        window.location.href = "http://localhost:5173";
+                        window.location.href = "https://mirabo-admin-kappa.vercel.app/";
                     }, 500);
                 }
 

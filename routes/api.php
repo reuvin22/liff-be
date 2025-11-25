@@ -14,6 +14,7 @@ use App\Http\Controllers\v1\FirebaseController;
 use App\Http\Controllers\v1\FirebasePostController;
 use App\Http\Controllers\v1\OpenAiController;
 use App\Http\Controllers\v1\QuestionController;
+use App\Http\Controllers\v1\data\TotalInfoController;
 use App\Models\DataImports;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,11 +38,15 @@ Route::post('/forgot-password', [ForgotPasswordController::class, 'checkEmail'])
 Route::post('/register', [UserController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
+    Route::get('auth/profile', [AuthController::class, 'profile']);
     Route::post('import', [DataImportController::class, 'dataImport']);
     Route::resource('/users', UserController::class);
     Route::get('/user-count', [DashboardDataController::class, 'userCount']);
     Route::get('/prompt-count', [DashboardDataController::class, 'promptCount']);
     Route::get('/ads-count', [DashboardDataController::class, 'adsCount']);
     Route::get('/answer-count', [DashboardDataController::class, 'answerCount']);
+    Route::get('/total-line-user', [DashboardDataController::class, 'totalLineUsers']);
+    Route::resource('/answers', TotalInfoController::class);
+    Route::post('/data-import', [DataImportController::class, 'dataImport']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
