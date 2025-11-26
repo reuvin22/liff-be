@@ -16,6 +16,7 @@ class AnswerController extends Controller
     /**
      * Display a listing of the resource.
      */
+    //TEST
     public function index()
     {
         $answers = Answer::all();
