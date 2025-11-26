@@ -1,0 +1,11 @@
+---
+deployment:
+  tasks:
+    # Destination path for public assets
+    - export DEPLOYPATH=/home/miraboes/public_html/liff-be
+
+    # Copy public folder contents to web root
+    - /bin/cp -R public/* $DEPLOYPATH
+
+    # Optional: set permissions for storage/cache
+    - /bin/chmod -R 775 storage bootstrap/cache
