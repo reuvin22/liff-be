@@ -97,6 +97,7 @@ class AnswerController extends Controller
                 'answer' => $answers
             ], 200);
         }catch(Exception $e){
+            Log::info('ERROR: ', ['error' => $e->getMessage()]);
             return response()->json([
                 'message' => $e->getMessage()
             ], 400);
