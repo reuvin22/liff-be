@@ -1,11 +1,14 @@
 ---
 deployment:
   tasks:
-    # Destination path for public assets
-    - export DEPLOYPATH=/home/miraboes/public_html/liff-be
+    - export DEPLOYPATH=/home/your_cpanel_username/public_html/liff-be
 
-    # Copy public folder contents to web root
+    # Copy public assets
     - /bin/cp -R public/* $DEPLOYPATH
 
-    # Optional: set permissions for storage/cache
-    - /bin/chmod -R 775 storage bootstrap/cache
+    # Run composer install (if vendor changes)
+    - /usr/local/bin/php /home/username/repositories/liff-be/composer.phar install --no-dev --optimize-autoloader
+
+    # Clear and cache configs/routes
+    - /usr/local/bin/php /home/username/repositories/liff-be/artisan config:cache
+    - /usr/local/bin/php /home/username/repositories/liff-be/artisan route:cache
