@@ -81,12 +81,8 @@ class AnswerController extends Controller
                 ], 400);
             }
 
-            $test = Cache::put("answers_{$data['userId']}", $answers);
-            Log::info('test', ['test' => $test]);
             $openAi = new OpenAiController();
             $result = $openAi->generatedResult($answers, $data['userId']);
-            Cache::put('openAiResponse_' . $data['userId'], $result, now()->addMinutes(60));
-            Cache::put("answers_{$data['userId']}", $answers->toArray(), now()->addMinutes(60));
             GeneratedResult::create([
                 'userId' => $data['userId'],
                 'openai_result' => $result
