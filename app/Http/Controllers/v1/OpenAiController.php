@@ -17,7 +17,7 @@ class OpenAiController extends Controller
     {
         // Build prompt segments
         $prompt1 = '【大学時代に'. $answers->Question_3 .'」の活動を通じて、'.
-            $answers->Question_1 .'と'. $answers->Question_2 .'を発揮したエピソードについて説明します。】';
+        $answers->Question_1 .'と'. $answers->Question_2 .'を発揮したエピソードについて説明します。】';
         $prompt2 = '具体的には、'. $answers->Question_5. 'として '. $answers->Question_4. '、をめざして取り組んだ経験です。';
         $prompt3 = '説明の中で、どのように'. $answers->Question_1. '、'. $answers->Question_2. 'を発揮したかについて具体的に説明してください。';
         $prompt4 = '具体的に説明するための条件として、'. $answers->Question_1. ' とは '. $answers->Ability_Desc_1. ' です。';
@@ -46,37 +46,44 @@ class OpenAiController extends Controller
             $prompt13 . "\n" . $prompt14 . "\n" . $prompt15 . "\n" .
             $prompt16 . "\n" . $prompt17 . "\n" . $prompt18;
 
-        Log::info('THIS IS AI PROMPT RAW ANSWERS:', ['answers' => $answers]);
-
         // Wrap in XML-like tags
         $wrappedUserContent = "<USER_INPUT>\n" . $userContent . "\n</USER_INPUT>";
 
         // System prompt
-        $systemPrompt = "
-    # 以下の指示に厳密に従って文章を作成してください。
+        $systemPrompt = "#以下の文章を日本語で読み手にわかりやすいよう書いてください。
+                            #文末は、「です」「ます」等の文体で記述し、体言止めは使わないでください。
+                            #箇条書きは使用しないでください。
+                            #文章は論理の飛躍がないように具体的かつ詳細に記述してください。
+                            #最初に示した能力が、経験や活動、考えたことと合致しない場合は、合致するようなエピソードを創作して下さい。もしこの作業を行った場合、最後の文章の句読点を二つ表記してください。
+                            #志望動機を示す文章は論理の飛躍がないように具体的かつ詳細に記述してください。
+                            #文章を作成する前に、後の指示で｛｝で示された企業の「企業理念やビジョン、ミッション」「事業内容」「具体的な仕事内容」を確認してください。
+                            #能力の具体的な活かし方は示さず、能力が志望職種の仕事で活かせることのみを簡潔に示してください。
+                            #文章は対象とする企業に提出することを前提とし、「貴社」という単語を使ってください。
+                            #出力する際の条件
+                            1.ガクチカを【ガクチカ】というタイトルで日本語で3000文字以上で作成して出力。
+                            2.ガクチカで示した能力を基に、【志望動機】という対応で日本語で3000文字以上で作成、及び出力。
+                            3.ガクチカと志望動機を基に、【自己PR】というタイトルで日本語で3000文字以上で作成、及び出力。
+                            ガクチカ・志望動機・自己PRをそれぞれを個別に作成してください。
+                            {{USER_INPUT}}
+                            【】で囲まれた内容について、能力を発揮した様子が読み手に伝わる文章を創作して下さい。
+                            示された能力を発揮することで、どのような普遍性の高い広範囲に応用可能な効果が出せることを学んだかについて、文末で説明してください。
+                            その必要性を実感したことについて示された経験になぞらえ説明してください。
+                            （）で示した内容をもとに以下の条件と順序に従って文章を作成してください。
+                            ①：魅力を感じる「企業理念やビジョン、ミッション」「事業内容」「具体的な仕事内容」 を示してください。
+                            ②：魅力を感じる理由について、自身の経験や、経験の中で感じた気持ちや考え方を交えて説明してください。
+                            ③：②で示された理由と①で示された内容に整合性がない場合、気持ちや考え方を想定し、理由のみを創作してください。
+                            ④：行動力コミュニケーション能力が、活かせる職種を想定して、その具体的な職種名を示し、その職種で示した能力が活かせることも志望動機として追記してください。
+                            ⑤：必ず入社して「企業理念やビジョン、ミッション」の実現に貢献したいという思いを最後に伝えてください。
+                            #ガクチカ・志望動機で示された内容を前提として、以下の流れで文書を作成してください。
+                            １．自身の強みとなる知識や能力を示してください。
+                            ２．示した知識や能力を志望職種の仕事でどのように活かせると考えているか説明してください。
+                            ３．その結果としてどのような成果を出せると考えているか説明してください。
+                            ４．その成果が事業の発展にどのようにつながるのか説明してください。
+                            ５．その成果が「企業理念やビジョン、ミッション」の実現にどのようにつながるかについて説明して下さい。
+                            ６．自身が企業の発展に必ず貢献できることを宣言してください。
+                            ７．最後に、採用してもらえるように明確にお願いしてください。";
 
-    # 【重要ルール】
-    ・与えられた {USER_INPUT} の内容のみを使用し、それ以外の情報を追加しないこと。
-    ・過去の文脈を参照しない。
-    ・文末は「です／ます」調。
-    ・箇条書き禁止。
-    ・企業には「貴社」を使用する。
-
-    # 【出力形式】
-    1. 【ガクチカ】
-    2. 【志望動機】
-    3. 【自己PR】
-
-    # {USER_INPUT} を必ず全文使用すること。
-    ";
-
-        // Insert user content inside system prompt
         $systemPrompt = str_replace('{USER_INPUT}', $wrappedUserContent, $systemPrompt);
-
-        // Log system prompt and user input
-        Log::info('SYSTEM PROMPT WITH USER_INPUT:', ['systemPromptFinal' => $systemPrompt]);
-        Log::info('FINAL USER CONTENT SENT:', ['content' => $wrappedUserContent]);
-
         try {
             $accessKey = env('OPEN_AI_API_KEY');
             $client = GlobalOpenAI::client($accessKey);
@@ -92,13 +99,8 @@ class OpenAiController extends Controller
                 ]
             ];
 
-            // Log EXACT payload being sent to OpenAI
-            Log::info('OPENAI REQUEST PAYLOAD:', $payload);
-
-            // Send request
             $result = $client->chat()->create($payload);
 
-            // Save to DB
             Prompt::create([
                 'data_id' => $userId,
                 'prompt' => $result->choices[0]->message->content
@@ -106,7 +108,6 @@ class OpenAiController extends Controller
 
             $response = $result->choices[0]->message->content;
 
-            // Ensure response is Japanese
             if (!preg_match('/[\p{Hiragana}\p{Katakana}\p{Han}]/u', $response)) {
                 Log::warning("Unexpected language in response: " . $response);
                 return response()->json(['error' => 'Generated response is not in Japanese'], 500);
@@ -225,7 +226,9 @@ class OpenAiController extends Controller
             $prompt13 . "\n" . $prompt14 . "\n" . $prompt15 . "\n" .
             $prompt16 . "\n" . $prompt17 . "\n" . $prompt18;
 
-             $systemPrompt = "#以下の文章を日本語で読み手にわかりやすいよう書いてください。
+            $wrappedUserContent = "<USER_INPUT>\n" . $userContent . "\n</USER_INPUT>";
+
+            $systemPrompt = "#以下の文章を日本語で読み手にわかりやすいよう書いてください。
                     #文末は、「です」「ます」等の文体で記述し、体言止めは使わないでください。
                     #箇条書きは使用しないでください。
                     #文章は論理の飛躍がないように具体的かつ詳細に記述してください。
@@ -258,23 +261,22 @@ class OpenAiController extends Controller
                     ６．自身が企業の発展に必ず貢献できることを宣言してください。
                     ７．最後に、採用してもらえるように明確にお願いしてください。";
 
-            $finalSystemContent = str_replace("{{USER_INPUT}}", $userContent, $systemPrompt);
+            $systemPrompt = str_replace('{USER_INPUT}', $wrappedUserContent, $systemPrompt);
             try {
                 $prompt = Prompt::where('data_id', $userId)->latest()->first();
                 $accessKey = env('OPEN_AI_API_KEY');
                 $client = GlobalOpenAI::client($accessKey);
-                $result = $client->chat()->create([
-                    'model' => 'gpt-4o',
+                $payload = [
+                    'model'       => 'gpt-4o',
                     'temperature' => 1.0,
-                    'top_p' => 1.0,
-                    'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => $finalSystemContent
-                        ]
+                    'top_p'       => 1.0,
+                    'messages'    => [
+                        ['role' => 'system', 'content' => $systemPrompt],
+                        ['role' => 'user', 'content' => $wrappedUserContent],
                     ]
-                ]);
+                ];
 
+                $result = $client->chat()->create($payload);
 
                 Prompt::create([
                     'data_id' => $userId,
